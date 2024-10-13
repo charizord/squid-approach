@@ -1,6 +1,5 @@
-
 classdef Nanonis
-    
+        
 	properties (SetAccess = public)
         Computer=General.Check_Computer();
         instr=General.Find_instr('TCPIP-192.168.236.1'); 
@@ -8,12 +7,15 @@ classdef Nanonis
         XYscanner_Length=40;
         Axis=['0','x','y','z'];
     end
-    methods(Static)
-
+    methods(Access = private)
         %%   Nanonis comunication
         function ss = Header(mes,BS)
            % This function convert the command to a binar value 
            % Body size (int) (4 bytes) is the size of the message body in bytes.
+           % pad(str,numberOfCharacters,side,pad_character) adds space characters to the side specified by side, up to the length specified by numberOfCharacters.
+           % sprintf(formatSpec,A1,...,An) formats the data in arrays A1,...,An using the formatting operators specified by formatSpec and returns the resulting text in str.
+           % X - base16 A-F letters, Hex?
+
            commName=pad(sprintf('%X',mes),64,'0');
            bodySizVal=BS;
            bodySize=pad(sprintf('%X',bodySizVal),8,'left','0');
@@ -24,6 +26,7 @@ classdef Nanonis
        
         function Send(varargin)
            % Sends the message to Nanonis
+           % varargin = {0,command,bodysize}
            % message format sending: handle to Nanonis connection (nis) ;
            % String with the command to send ; Number of bytes of Body
            % message ; For each argument in Body we send 2 variables (seperated by comma),
@@ -189,6 +192,10 @@ classdef Nanonis
                    end 
                 end 
         end    
+    end
+    methods(Static)
+
+        
 
         %% 
         function [V]= Get(NanonisChannel)
